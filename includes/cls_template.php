@@ -297,7 +297,16 @@ class cls_template
                  $source= str_replace('%%%SMARTYSP'.$curr_sp.'%%%', '<?php echo \''.str_replace("'", "\'", $sp_match[1][$curr_sp]).'\'; ?>'."\n", $source);
             }
          }
-         return preg_replace("/{([^\}\{\n]*)}/e", "\$this->select('\\1');", $source);
+         //return preg_replace("/{([^\}\{\n]*)}/e", "\$this->select('\\1');", $source);
+         if (version_compare(PHP_VERSION, '5.5.0') < 0) {
+           return preg_replace("/{([^\}\{\n]*)}/e", "\$this->select('\\1');", $source);
+         }
+         else {
+           return preg_replace_callback("/{([^\}\{\n]*)}/", array($this,'_select'), $source);
+         }
+    }
+    private function _select($matches) {
+      $this->select($matches[1]);
     }
 
     /**
@@ -419,7 +428,8 @@ class cls_template
         }
         else
         {
-            $tag_sel = array_shift(explode(' ', $tag));
+            $_tag_arr = explode(' ', $tag);
+            $tag_sel = array_shift($_tag_arr);
             switch ($tag_sel)
             {
                 case 'if':

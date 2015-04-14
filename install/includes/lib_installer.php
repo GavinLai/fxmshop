@@ -19,6 +19,11 @@ if (!defined('IN_ECS'))
 }
 
 /**
+ * 避免安装错误
+ */
+date_default_timezone_set ('Asia/Shanghai');
+
+/**
  * 获得GD的版本号
  *
  * @access  public
