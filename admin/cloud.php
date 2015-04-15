@@ -92,6 +92,8 @@ if($act =='menu_api')
 }
 elseif($act == 'cloud_remind')
 {
+    make_json_result('0'); //关闭云激活提醒
+  
     $api_data = read_static_cache('cloud_remind');
     
     if($api_data === false || (isset($api_data['api_time']) && $api_data['api_time']<date('Ymd')) )
