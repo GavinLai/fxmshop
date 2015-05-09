@@ -302,11 +302,11 @@ class cls_template
            return preg_replace("/{([^\}\{\n]*)}/e", "\$this->select('\\1');", $source);
          }
          else {
-           return preg_replace_callback("/{([^\}\{\n]*)}/", array($this,'_select'), $source);
+           return preg_replace_callback("/{([^\}\{\n]*)}/", array($this,'_preg_replace_eval_select'), $source);
          }
     }
-    private function _select($matches) {
-      $this->select($matches[1]);
+    private function _preg_replace_eval_select($matches) {
+      return $this->select($matches[1]);
     }
 
     /**
@@ -500,7 +500,13 @@ class cls_template
                 case 'insert' :
                     $t = $this->get_para(substr($tag, 7), false);
 
-                    $out = "<?php \n" . '$k = ' . preg_replace("/(\'\\$[^,]+)/e" , "stripslashes(trim('\\1','\''));", var_export($t, true)) . ";\n";
+                    //$out = "<?php \n" . '$k = ' . preg_replace("/(\'\\$[^,]+)/e" , "stripslashes(trim('\\1','\''));", var_export($t, true)) . ";\n";
+                    if (version_compare(PHP_VERSION, '5.5.0') < 0) {
+                      $out = "<?php \n" . '$k = ' . preg_replace("/(\'\\$[^,]+)/e" , "stripslashes(trim('\\1','\''));", var_export($t, true)) . ";\n";
+                    }
+                    else {
+                      $out = "<?php \n" . '$k = ' . preg_replace_callback("/(\'\\$[^,]+)/" , array($this,'_preg_replace_eval_stripslashes'), var_export($t, true)) . ";\n";
+                    }
                     $out .= 'echo $this->_echash . $k[\'name\'] . \'|\' . serialize($k) . $this->_echash;' . "\n?>";
 
                     return $out;
@@ -546,6 +552,9 @@ class cls_template
             }
         }
     }
+    private function _preg_replace_eval_stripslashes($matches) {
+      return stripslashes(trim($matches[1],'\''));
+    }
 
     /**
      * 处理smarty标签中的变量标签
@@ -555,11 +564,20 @@ class cls_template
      *
      * @return  bool
      */
+    private function _preg_replace_eval_strreplace($matches) {
+      return '.'.str_replace('$','\$',$matches[1]);
+    }
     function get_val($val)
     {
         if (strrpos($val, '[') !== false)
         {
-            $val = preg_replace("/\[([^\[\]]*)\]/eis", "'.'.str_replace('$','\$','\\1')", $val);
+            //$val = preg_replace("/\[([^\[\]]*)\]/eis", "'.'.str_replace('$','\$','\\1')", $val);
+            if (version_compare(PHP_VERSION, '5.5.0') < 0) {
+              $val = preg_replace("/\[([^\[\]]*)\]/eis", "'.'.str_replace('$','\$','\\1')", $val);
+            }
+            else {
+              $val = preg_replace_callback("/\[([^\[\]]*)\]/is", array($this,'_preg_replace_eval_strreplace'), $val);
+            }
         }
 
         if (strrpos($val, '|') !== false)
@@ -1065,6 +1083,10 @@ class cls_template
         return $str;
     }
 
+    private function _preg_replace_eval_tolower($matches) {
+      $mstr = strtolower($matches[1]);
+      return "{include file={$mstr}}";
+    }
     function smarty_prefilter_preCompile($source)
     {
         $file_type = strtolower(strrchr($this->_current_file, '.'));
@@ -1078,7 +1100,14 @@ class cls_template
             /* 将模板中所有library替换为链接 */
             $pattern     = '/<!--\s#BeginLibraryItem\s\"\/(.*?)\"\s-->.*?<!--\s#EndLibraryItem\s-->/se';
             $replacement = "'{include file='.strtolower('\\1'). '}'";
-            $source      = preg_replace($pattern, $replacement, $source);
+            //$source      = preg_replace($pattern, $replacement, $source);
+            if (version_compare(PHP_VERSION, '5.5.0') < 0) {
+              $source    = preg_replace($pattern, $replacement, $source);
+            }
+            else {
+              $pattern   = substr($pattern, 0, -1); //去掉最后的'e'(PREG_REPLACE_EVAL)修饰符 
+              $source    = preg_replace_callback($pattern, array($this,'_preg_replace_eval_tolower'), $source);
+            }
 
             /* 检查有无动态库文件，如果有为其赋值 */
             $dyna_libs = get_dyna_libs($GLOBALS['_CFG']['template'], $this->_current_file);
