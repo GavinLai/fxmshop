@@ -3,6 +3,8 @@ test.php
 test.html
 test*.php
 test*.html
+data/*
+temp/*
 
 # Eclipse
 .buildpath
