@@ -5,6 +5,7 @@ test*.php
 test*.html
 data/*
 temp/*
+images/*
 
 # Eclipse
 .buildpath
