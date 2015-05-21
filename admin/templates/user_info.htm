@@ -5,7 +5,7 @@
 <table width="100%" >
   <tr>
     <td class="label">{$lang.username}:</td>
-    <td>{if $form_action eq "update"}{$user.user_name}<input type="hidden" name="username" value="{$user.user_name}" />{else}<input type="text" name="username" maxlength="60" value="{$user.user_name}" />{$lang.require_field}{/if}</td>
+    <td>{if $form_action eq "update"}{$user.nick_name} ({$user.user_name})<input type="hidden" name="username" value="{$user.user_name}" />{else}<input type="text" name="username" maxlength="60" value="{$user.user_name}" />{$lang.require_field}{/if}</td>
   </tr>
   {if $form_action eq "update"}
   <tr>

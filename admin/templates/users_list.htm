@@ -37,7 +37,7 @@
   {foreach from=$user_list item=user}
   <tr>
     <td><input type="checkbox" name="checkboxes[]" value="{$user.user_id}" notice="{if $user.user_money ne 0}1{else}0{/if}"/>{$user.user_id}</td>
-    <td class="first-cell">{$user.user_name|escape}</td>
+    <td class="first-cell">({$user.user_name|escape}) {$user.nick_name|escape}</td>
     <td><span onclick="listTable.edit(this, 'edit_email', {$user.user_id})">{$user.email}</span></td>
     <td align="center">{if $user.is_validated} <img src="images/yes.gif"> {else} <img src="images/no.gif"> {/if}</td>
     <td>{$user.user_money}</td>

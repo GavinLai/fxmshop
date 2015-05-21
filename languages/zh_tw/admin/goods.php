@@ -67,7 +67,8 @@ $_LANG['sort_order'] = '推薦排序';
 
 $_LANG['goods_name'] = '商品名稱';
 $_LANG['goods_sn'] = '貨號';
-$_LANG['shop_price'] = '價格';
+$_LANG['shop_price'] = '本店售價';
+$_LANG['income_price'] = '進貨價';
 $_LANG['is_on_sale'] = '上架';
 $_LANG['goods_number'] = '庫存';
 
@@ -90,6 +91,8 @@ $_LANG['goods_name_null'] = '請輸入商品名稱';
 $_LANG['goods_sn_null'] = '請輸入貨號';
 $_LANG['shop_price_not_number'] = '價格不是數字';
 $_LANG['shop_price_invalid'] = '您輸入了一個非法的市場價格。';
+$_LANG['income_price_not_number'] = '價格不是數字';
+$_LANG['income_price_invalid'] = '您輸入了一個非法的進貨價格。';
 $_LANG['goods_sn_exists'] = '您輸入的貨號已存在，請換一個';
 
 /*------------------------------------------------------ */
@@ -110,6 +113,7 @@ $_LANG['lab_goods_cat'] = '商品分類：';
 $_LANG['lab_other_cat'] = '擴展分類：';
 $_LANG['lab_goods_brand'] = '商品品牌：';
 $_LANG['lab_shop_price'] = '本店售價：';
+$_LANG['lab_income_price'] = '進貨價：';
 $_LANG['lab_market_price'] = '市場售價：';
 $_LANG['lab_user_price'] = '會員價格：';
 $_LANG['lab_promote_price'] = '促銷價：';
@@ -228,6 +232,8 @@ $_LANG['js_languages']['brand_cat_not_null'] = '品牌名稱不能為空';
 $_LANG['js_languages']['goods_cat_not_leaf'] = '您選擇的商品分類不是底級分類，請選擇底級分類。';
 $_LANG['js_languages']['shop_price_not_null'] = '本店售價不能為空。';
 $_LANG['js_languages']['shop_price_not_number'] = '本店售價不是數值。';
+$_LANG['js_languages']['shop_income_not_null'] = '進貨價不能為空。';
+$_LANG['js_languages']['shop_income_not_number'] = '進貨價不是數值。';
 
 $_LANG['js_languages']['select_please'] = '請選擇...';
 $_LANG['js_languages']['button_add'] = '添加';

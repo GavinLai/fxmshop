@@ -96,6 +96,12 @@
           </tr>
          {/if}
           <tr>
+            <td class="label">{$lang.lab_income_price}</td>
+            <td><input type="text" name="income_price" value="{$goods.income_price}" size="20"/>
+            <input type="button" value="{$lang.integral_market_price}" onclick="integral_income_price()" />
+            {$lang.require_field}</td>
+          </tr>
+          <tr>
             <td class="label">{$lang.lab_shop_price}</td>
             <td><input type="text" name="shop_price" value="{$goods.shop_price}" size="20" onblur="priceSetted()"/>
             <input type="button" value="{$lang.compute_by_mp}" onclick="marketPriceSetted()" />
@@ -478,6 +484,8 @@
 
       checkVolumeData("1",validator);
 
+      validator.required('income_price', shop_income_not_null);
+      validator.isNumber('income_price', shop_income_not_number, true);
       validator.required('shop_price', shop_price_not_null);
       validator.isNumber('shop_price', shop_price_not_number, true);
       validator.isNumber('market_price', market_price_not_number, false);
@@ -1006,6 +1014,14 @@
   function integral_market_price()
   {
     document.forms['theForm'].elements['market_price'].value = parseInt(document.forms['theForm'].elements['market_price'].value);
+  }
+
+  /**
+   * 灏嗗競鍦轰环鏍煎彇鏁
+   */
+  function integral_income_price()
+  {
+    document.forms['theForm'].elements['income_price'].value = parseInt(document.forms['theForm'].elements['income_price'].value);
   }
 
    /**

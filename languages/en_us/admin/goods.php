@@ -70,7 +70,8 @@ $_LANG['sort_order'] = 'Recommend to sort';
 
 $_LANG['goods_name'] ='Name';
 $_LANG['goods_sn'] ='NO.';
-$_LANG['shop_price'] ='Price';
+$_LANG['shop_price'] ='Shop Price';
+$_LANG['income_price'] ='Income Price';
 $_LANG['is_on_sale'] ='On sale';
 $_LANG['goods_number'] ='Stock';
 
@@ -93,6 +94,8 @@ $_LANG['goods_name_null'] ='Please enter product name.';
 $_LANG['goods_sn_null'] ='Please enter product NO..';
 $_LANG['shop_price_not_number']='Price must be a figure.';
 $_LANG['shop_price_invalid'] = 'You have entered an illegal market price.';
+$_LANG['income_price_not_number']='Price must be a figure.';
+$_LANG['income_price_invalid'] = 'You have entered an illegal income price.';
 $_LANG['goods_sn_exists'] ='The product NO. already exist, please change a number.';
 
 /*------------------------------------------------------ */
@@ -113,6 +116,7 @@ $_LANG['lab_goods_cat'] ='Category:';
 $_LANG['lab_other_cat'] ='Extend category:';
 $_LANG['lab_goods_brand'] ='Brand:';
 $_LANG['lab_shop_price'] ='Shop price:';
+$_LANG['lab_income_price'] = 'Income price:';
 $_LANG['lab_market_price'] ='Market price:';
 $_LANG['lab_user_price'] ='Member price:';
 $_LANG['lab_promote_price'] ='Promotion price:';
@@ -232,6 +236,8 @@ $_LANG['js_languages']['brand_cat_not_null'] = 'Brand name can not null';
 $_LANG['js_languages']['goods_cat_not_leaf'] ='You selected product category isn\'t a bottom class category, please select a bottom class category.';
 $_LANG['js_languages']['shop_price_not_null']='The shop selling price can\'t be blank.';
 $_LANG['js_languages']['shop_price_not_number']='The shop selling price isn\'t a figure.';
+$_LANG['js_languages']['shop_income_not_null'] = 'The income price can\'t be blank.';
+$_LANG['js_languages']['shop_income_not_number'] = 'The income price isn\'t a figure.';
 
 $_LANG['js_languages']['select_please'] ='Please select...';
 $_LANG['js_languages']['button_add'] ='Add';

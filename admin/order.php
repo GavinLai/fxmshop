@@ -210,6 +210,7 @@ elseif ($_REQUEST['act'] == 'info')
         if (!empty($user))
         {
             $order['user_name'] = $user['user_name'];
+            $order['nick_name'] = $user['nick_name'];
         }
     }
 
@@ -5042,7 +5043,7 @@ function order_list()
         $sql = "SELECT o.order_id, o.order_sn, o.add_time, o.order_status, o.shipping_status, o.order_amount, o.money_paid," .
                     "o.pay_status, o.consignee, o.address, o.email, o.tel, o.extension_code, o.extension_id, " .
                     "(" . order_amount_field('o.') . ") AS total_fee, " .
-                    "IFNULL(u.user_name, '" .$GLOBALS['_LANG']['anonymous']. "') AS buyer ".
+                    "IFNULL(u.user_name, '" .$GLOBALS['_LANG']['anonymous']. "') AS buyer,IFNULL(u.nick_name,'') AS buyer_nick ".
                 " FROM " . $GLOBALS['ecs']->table('order_info') . " AS o " .
                 " LEFT JOIN " .$GLOBALS['ecs']->table('users'). " AS u ON u.user_id=o.user_id ". $where .
                 " ORDER BY $filter[sort_by] $filter[sort_order] ".
