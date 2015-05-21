@@ -67,6 +67,7 @@ $_LANG['sort_order'] = '推薦排序';
 
 $_LANG['goods_name'] = '商品名稱';
 $_LANG['goods_sn'] = '貨號';
+$_LANG['origin_place'] = '原產地';
 $_LANG['shop_price'] = '本店售價';
 $_LANG['income_price'] = '進貨價';
 $_LANG['is_on_sale'] = '上架';
@@ -112,6 +113,7 @@ $_LANG['lab_goods_sn'] = '商品貨號：';
 $_LANG['lab_goods_cat'] = '商品分類：';
 $_LANG['lab_other_cat'] = '擴展分類：';
 $_LANG['lab_goods_brand'] = '商品品牌：';
+$_LANG['lab_origin_place'] = '原產地：';
 $_LANG['lab_shop_price'] = '本店售價：';
 $_LANG['lab_income_price'] = '進貨價：';
 $_LANG['lab_market_price'] = '市場售價：';

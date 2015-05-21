@@ -166,6 +166,7 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit' || $_REQUEST['ac
             'is_shipping' => '0',
             'other_cat'     => array(), // 扩展分类
             'goods_type'    => 0,       // 商品类型
+            'origin_place_id' => 0,
             'shop_price'    => 0,
             'income_price'  => 0,
             'promote_price' => 0,
@@ -235,6 +236,7 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit' || $_REQUEST['ac
                 'is_shipping' => '0',
                 'other_cat'     => array(), // 扩展分类
                 'goods_type'    => 0,       // 商品类型
+                'origin_place_id' => 0,
                 'shop_price'    => 0,
                 'income_price'  => 0,
                 'promote_price' => 0,
@@ -424,6 +426,8 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit' || $_REQUEST['ac
     $smarty->assign('goods_name_style', $goods_name_style[1]);
     $smarty->assign('cat_list', cat_list(0, $goods['cat_id']));
     $smarty->assign('brand_list', get_brand_list());
+    $smarty->assign('origin_place_list', get_origin_place_list());
+    //$smarty->assign('origin_place_list', cat_list(ORIGIN_PLACE_TOP_CAT_ID, $goods['origin_place_id'], true, 2));
     $smarty->assign('unit_list', get_unit_list());
     $smarty->assign('user_rank_list', get_user_rank_list());
     $smarty->assign('weight_unit', $is_add ? '1' : ($goods['goods_weight'] >= 1 ? '1' : '0.001'));
@@ -798,6 +802,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
     }
 
     /* 处理商品数据 */
+    $origin_place_id = !empty($_POST['origin_place_id']) ? $_POST['origin_place_id'] : 0;
     $shop_price = !empty($_POST['shop_price']) ? $_POST['shop_price'] : 0;
     $income_price = !empty($_POST['income_price']) ? $_POST['income_price'] : 0;
     $market_price = !empty($_POST['market_price']) ? $_POST['market_price'] : 0;
@@ -833,11 +838,11 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
         if ($code == '')
         {
             $sql = "INSERT INTO " . $ecs->table('goods') . " (goods_name, goods_name_style, goods_sn, " .
-                    "cat_id, brand_id, shop_price, income_price, market_price, is_promote, promote_price, " .
+                    "cat_id, origin_place_id, brand_id, shop_price, income_price, market_price, is_promote, promote_price, " .
                     "promote_start_date, promote_end_date, goods_img, goods_thumb, original_img, keywords, goods_brief, " .
                     "seller_note, goods_weight, goods_number, warn_number, integral, give_integral, is_best, is_new, is_hot, " .
                     "is_on_sale, is_alone_sale, is_shipping, goods_desc, add_time, last_update, goods_type, rank_integral, suppliers_id)" .
-                "VALUES ('$_POST[goods_name]', '$goods_name_style', '$goods_sn', '$catgory_id', " .
+                "VALUES ('$_POST[goods_name]', '$goods_name_style', '$goods_sn', '$catgory_id', '$origin_place_id'," .
                     "'$brand_id', '$shop_price', '$income_price' , '$market_price', '$is_promote','$promote_price', ".
                     "'$promote_start_date', '$promote_end_date', '$goods_img', '$goods_thumb', '$original_img', ".
                     "'$_POST[keywords]', '$_POST[goods_brief]', '$_POST[seller_note]', '$goods_weight', '$goods_number',".
@@ -847,11 +852,11 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
         else
         {
             $sql = "INSERT INTO " . $ecs->table('goods') . " (goods_name, goods_name_style, goods_sn, " .
-                    "cat_id, brand_id, shop_price, income_price, market_price, is_promote, promote_price, " .
+                    "cat_id, origin_place_id, brand_id, shop_price, income_price, market_price, is_promote, promote_price, " .
                     "promote_start_date, promote_end_date, goods_img, goods_thumb, original_img, keywords, goods_brief, " .
                     "seller_note, goods_weight, goods_number, warn_number, integral, give_integral, is_best, is_new, is_hot, is_real, " .
                     "is_on_sale, is_alone_sale, is_shipping, goods_desc, add_time, last_update, goods_type, extension_code, rank_integral)" .
-                "VALUES ('$_POST[goods_name]', '$goods_name_style', '$goods_sn', '$catgory_id', " .
+                "VALUES ('$_POST[goods_name]', '$goods_name_style', '$goods_sn', '$catgory_id', '$origin_place_id', " .
                     "'$brand_id', '$shop_price', '$income_price' , '$market_price', '$is_promote','$promote_price', ".
                     "'$promote_start_date', '$promote_end_date', '$goods_img', '$goods_thumb', '$original_img', ".
                     "'$_POST[keywords]', '$_POST[goods_brief]', '$_POST[seller_note]', '$goods_weight', '$goods_number',".
@@ -883,6 +888,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
                 "goods_sn = '$goods_sn', " .
                 "cat_id = '$catgory_id', " .
                 "brand_id = '$brand_id', " .
+                "origin_place_id = '$origin_place_id', " .
                 "shop_price = '$shop_price', " .
                 "income_price = '$income_price', " .
                 "market_price = '$market_price', " .

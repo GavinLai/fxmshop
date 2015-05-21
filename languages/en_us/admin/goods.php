@@ -70,6 +70,7 @@ $_LANG['sort_order'] = 'Recommend to sort';
 
 $_LANG['goods_name'] ='Name';
 $_LANG['goods_sn'] ='NO.';
+$_LANG['origin_place'] = 'Origin place';
 $_LANG['shop_price'] ='Shop Price';
 $_LANG['income_price'] ='Income Price';
 $_LANG['is_on_sale'] ='On sale';
@@ -115,6 +116,7 @@ $_LANG['lab_goods_sn'] ='NO.:';
 $_LANG['lab_goods_cat'] ='Category:';
 $_LANG['lab_other_cat'] ='Extend category:';
 $_LANG['lab_goods_brand'] ='Brand:';
+$_LANG['lab_origin_place'] = 'Origin place:';
 $_LANG['lab_shop_price'] ='Shop price:';
 $_LANG['lab_income_price'] = 'Income price:';
 $_LANG['lab_market_price'] ='Market price:';

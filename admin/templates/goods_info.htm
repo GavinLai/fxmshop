@@ -86,6 +86,10 @@
                {/if}
             </td>
           </tr>
+          <tr>
+            <td class="label">{$lang.lab_origin_place}</td>
+            <td><select name="origin_place_id"><option value="0">{$lang.select_please}{html_options options=$origin_place_list selected=$goods.origin_place_id}</select></td>
+          </tr>
          {if $suppliers_exists eq 1}
           <tr>
             <td class="label">{$lang.label_suppliers}</td>

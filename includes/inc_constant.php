@@ -18,6 +18,10 @@ if (!defined('IN_ECS'))
     die('Hacking attempt');
 }
 
+/*---------- Add by Gavin ----------*/
+/*原产地分类顶级id*/
+define('ORIGIN_PLACE_TOP_CAT_ID',  30);
+
 /* 图片处理相关常数 */
 define('ERR_INVALID_IMAGE',         1);
 define('ERR_NO_GD',                 2);

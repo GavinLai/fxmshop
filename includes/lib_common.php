@@ -236,9 +236,10 @@ function &init_users()
  * @param   boolean $re_type    返回的类型: 值为真时返回下拉列表,否则返回数组
  * @param   int     $level      限定返回的级数。为0时返回所有级数
  * @param   int     $is_show_all 如果为true显示所有分类，如果为false隐藏不可见分类。
+ * @param   array   $exclude_ids 排除cat_id集合，将会排除$exclude_ids包括的cat_id，及对应cat_id下级的所有子分类id；默认排除“原产地”分类id
  * @return  mix
  */
-function cat_list($cat_id = 0, $selected = 0, $re_type = true, $level = 0, $is_show_all = true)
+function cat_list($cat_id = 0, $selected = 0, $re_type = true, $level = 0, $is_show_all = true, $exclude_ids = array(ORIGIN_PLACE_TOP_CAT_ID))
 {
     static $res = NULL;
 
@@ -327,6 +328,34 @@ function cat_list($cat_id = 0, $selected = 0, $re_type = true, $level = 0, $is_s
                 }
             }
         }
+    }
+    
+    //Add by Gavin
+    $children_level = 99999; //大于这个分类的将被删除
+    if (!empty($exclude_ids) && is_array($exclude_ids))
+    {
+      foreach ($options as $key => $val)
+      {
+        if ($val['level'] > $children_level)
+        {
+          unset($options[$key]);
+        }
+        else
+        {
+          if (in_array($val['cat_id'], $exclude_ids))
+          {
+            unset($options[$key]);
+            if ($children_level > $val['level'])
+            {
+              $children_level = $val['level']; //标记一下，这样子分类也能删除
+            }
+          }
+          else
+          {
+            $children_level = 99999; //恢复初始值
+          }
+        }
+      }
     }
 
     /* 截取到指定的缩减级别 */
@@ -645,6 +674,25 @@ function get_brand_list()
     }
 
     return $brand_list;
+}
+
+/**
+ * 获取原产地列表
+ * @return array 原产地列表 id => name
+ */
+function get_origin_place_list()
+{
+    $sql = 'SELECT cat_id, cat_name FROM ' . $GLOBALS['ecs']->table('category') .
+           ' WHERE `parent_id`='. ORIGIN_PLACE_TOP_CAT_ID . ' AND is_show=1 ORDER BY sort_order';
+    $res = $GLOBALS['db']->getAll($sql);
+
+    $place_list = array();
+    foreach ($res AS $row)
+    {
+        $place_list[$row['cat_id']] = addslashes($row['cat_name']);
+    }
+
+    return $place_list;
 }
 
 /**
