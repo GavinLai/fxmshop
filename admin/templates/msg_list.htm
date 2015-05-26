@@ -39,7 +39,7 @@
   {foreach from =$msg_list item=msg}
   <tr>
     <td><input type="checkbox" name="checkboxes[]" value="{$msg.msg_id}" />{$msg.msg_id}</td>
-    <td align="center">{$msg.user_name}</td>
+    <td align="center">({$msg.user_name}) {$msg.nick_name}</td>
     <td align="left">{$msg.msg_title|truncate:40|escape:html}</td>
     <td align="center">{$msg.msg_type}{if $msg.order_id}<br><a href="order.php?act=info&order_id={$msg.order_id}">{$msg.order_sn}{/if}</a></td>
     <td align="center"  nowrap="nowrap">{$msg.msg_time}</td>

@@ -16,6 +16,7 @@
 define('IN_ECS', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
+require(dirname(__FILE__) . '/../includes/cls_fxmgou.php');
 
 /*------------------------------------------------------ */
 //-- 用户帐号列表
@@ -105,6 +106,8 @@ elseif ($_REQUEST['act'] == 'insert')
     /* 检查权限 */
     admin_priv('users_manage');
     $username = empty($_POST['username']) ? '' : trim($_POST['username']);
+    $nickname = empty($_POST['nickname']) ? $username : trim($_POST['nickname']);
+    $nickname = addslashes($nickname);
     $password = empty($_POST['password']) ? '' : trim($_POST['password']);
     $email = empty($_POST['email']) ? '' : trim($_POST['email']);
     $sex = empty($_POST['sex']) ? 0 : intval($_POST['sex']);
@@ -182,6 +185,7 @@ elseif ($_REQUEST['act'] == 'insert')
     $other =  array();
     $other['credit_line'] = $credit_line;
     $other['user_rank']  = $rank;
+    $other['nick_name']  = $nickname;
     $other['sex']        = $sex;
     $other['birthday']   = $birthday;
     $other['reg_time'] = local_strtotime(local_date('Y-m-d H:i:s'));
@@ -194,6 +198,21 @@ elseif ($_REQUEST['act'] == 'insert')
 
     $db->autoExecute($ecs->table('users'), $other, 'UPDATE', "user_name = '$username'");
 
+    /* 同步fxmgou数据库用户 */
+    $ec_udata  = FXM::getEcUserInfo($username);
+    if (!empty($ec_udata)) {
+      $fxm_udata = array();
+      $fxm_udata['username'] = $ec_udata['user_name'];
+      $fxm_udata['nickname'] = $ec_udata['nick_name'];
+      $fxm_udata['password_raw'] = $password;
+      $fxm_udata['salt']     = $ec_udata['ec_salt'];
+      $fxm_udata['logo']     = '';
+      $fxm_udata['sex']      = $ec_udata['sex'];
+      $fxm_udata['email']    = $ec_udata['email'];
+      $fxm_udata['mobile']   = $ec_udata['mobile_phone'];
+      FXM::createUser($fxm_udata);
+    }
+    
     /* 记录管理员操作 */
     admin_log($_POST['username'], 'add', 'users');
 
@@ -345,6 +364,8 @@ elseif ($_REQUEST['act'] == 'update')
     /* 检查权限 */
     admin_priv('users_manage');
     $username = empty($_POST['username']) ? '' : trim($_POST['username']);
+    $nickname = empty($_POST['nickname']) ? '' : trim($_POST['nickname']);
+    $nickname = addslashes($nickname);
     $password = empty($_POST['password']) ? '' : trim($_POST['password']);
     $email = empty($_POST['email']) ? '' : trim($_POST['email']);
     $sex = empty($_POST['sex']) ? 0 : intval($_POST['sex']);
@@ -371,7 +392,7 @@ elseif ($_REQUEST['act'] == 'update')
     {
 			$sql="UPDATE ".$ecs->table('users'). "SET `ec_salt`='0' WHERE user_name= '".$username."'";
 			$db->query($sql);
-	}
+	  }
     /* 更新用户扩展字段的数据 */
     $sql = 'SELECT id FROM ' . $ecs->table('reg_fields') . ' WHERE type = 0 AND display = 1 ORDER BY dis_order, id';   //读出所有扩展字段的id
     $fields_arr = $db->getAll($sql);
@@ -403,6 +424,7 @@ elseif ($_REQUEST['act'] == 'update')
     $other =  array();
     $other['credit_line'] = $credit_line;
     $other['user_rank'] = $rank;
+    $other['nick_name'] = $nickname;
 
     $other['msn'] = isset($_POST['extend_field1']) ? htmlspecialchars(trim($_POST['extend_field1'])) : '';
     $other['qq'] = isset($_POST['extend_field2']) ? htmlspecialchars(trim($_POST['extend_field2'])) : '';
@@ -412,6 +434,18 @@ elseif ($_REQUEST['act'] == 'update')
 
     $db->autoExecute($ecs->table('users'), $other, 'UPDATE', "user_name = '$username'");
 
+    /* 同步fxmgou会员信息 */
+    $ec_udata  = FXM::getEcUserInfo($username);
+    if (!empty($ec_udata)) {
+      $fxm_udata = array();
+      $fxm_udata['nickname'] = $ec_udata['nick_name'];
+      $fxm_udata['password_raw'] = $password;
+      $fxm_udata['sex']      = $ec_udata['sex'];
+      $fxm_udata['email']    = $ec_udata['email'];
+      $fxm_udata['mobile']   = $ec_udata['mobile_phone'];
+      FXM::updateUser($fxm_udata, $ec_udata['member_id']);
+    }
+    
     /* 记录管理员操作 */
     admin_log($username, 'edit', 'users');
 
@@ -440,9 +474,14 @@ elseif ($_REQUEST['act'] == 'batch_remove')
         $col = $db->getCol($sql);
         $usernames = implode(',',addslashes_deep($col));
         $count = count($col);
+        $member_ids = FXM::getMemberIdFromEC($col);
+        
         /* 通过插件来删除用户 */
         $users =& init_users();
         $users->remove_user($col);
+        
+        /* 同步fxmgou删除 */
+        FXM::removeUser($member_ids);
 
         admin_log($usernames, 'batch_remove', 'users');
 
@@ -486,6 +525,9 @@ elseif ($_REQUEST['act'] == 'edit_username')
             /* 更新商城会员表 */
             $db->query('UPDATE ' .$ecs->table('users'). " SET user_name = '$username' WHERE user_id = '$id'");
         }
+        
+        /* 同步到fxmgou表 */
+        FXM::updateUser(array('user_name' => $username), $id);
 
         admin_log(addslashes($username), 'edit', 'users');
         make_json_result(stripcslashes($username));
@@ -518,6 +560,9 @@ elseif ($_REQUEST['act'] == 'edit_email')
     {
         if ($users->edit_user(array('username'=>$username, 'email'=>$email)))
         {
+            /* 同步到fxmgou表 */
+            FXM::updateUser(array('email' => $email), $id);
+          
             admin_log(addslashes($username), 'edit', 'users');
 
             make_json_result(stripcslashes($email));
@@ -544,11 +589,16 @@ elseif ($_REQUEST['act'] == 'remove')
     admin_priv('users_drop');
 
     $sql = "SELECT user_name FROM " . $ecs->table('users') . " WHERE user_id = '" . $_GET['id'] . "'";
-    $username = $db->getOne($sql);
+    $username  = $db->getOne($sql);
+    $member_id = FXM::getMemberIdFromEC($username);
+    
     /* 通过插件来删除用户 */
     $users =& init_users();
     $users->remove_user($username); //已经删除用户所有数据
 
+    /* 同步fxmgou删除 */
+    FXM::removeUser($member_id);
+    
     /* 记录管理员操作 */
     admin_log(addslashes($username), 'remove', 'users');
 
@@ -639,7 +689,7 @@ elseif ($_REQUEST['act'] == 'aff_list')
 
         if ($count)
         {
-            $sql = "SELECT user_id, user_name, '$i' AS level, email, is_validated, user_money, frozen_money, rank_points, pay_points, reg_time ".
+            $sql = "SELECT user_id, user_name, nick_name, '$i' AS level, email, is_validated, user_money, frozen_money, rank_points, pay_points, reg_time ".
                     " FROM " . $GLOBALS['ecs']->table('users') . " WHERE user_id IN($up_uid)" .
                     " ORDER by level, user_id";
             $user_list['user_list'] = array_merge($user_list['user_list'], $db->getAll($sql));
@@ -748,5 +798,4 @@ function user_list()
 
     return $arr;
 }
-
 ?>

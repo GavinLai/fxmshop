@@ -22,6 +22,7 @@ $_LANG['all_option'] = '所有等級';
 $_LANG['view_order'] = '查看訂單';
 $_LANG['view_deposit'] = '查看賬目明細';
 $_LANG['username'] = '會員名稱';
+$_LANG['nickname'] = '會員暱稱';
 $_LANG['email'] = '郵件地址';
 $_LANG['is_validated'] = '是否已驗證';
 $_LANG['reg_date'] = '註冊日期';

@@ -24,6 +24,7 @@ $_LANG['all_option'] = 'All...';
 $_LANG['view_order'] = 'View the order';
 $_LANG['view_deposit'] = 'View Account details';
 $_LANG['username'] = 'Username';
+$_LANG['nickname'] = 'Nickname';
 $_LANG['email'] = 'Email';
 $_LANG['is_validated'] = 'is_validated';
 $_LANG['reg_date'] = 'Register date';

@@ -351,7 +351,7 @@ function msg_list()
     /* 分页大小 */
     $filter = page_and_size($filter);
 
-    $sql = "SELECT f.msg_id, f.user_name, f.msg_title, f.msg_type, f.order_id, f.msg_status, f.msg_time, f.msg_area, COUNT(r.msg_id) AS reply " .
+    $sql = "SELECT f.msg_id, f.user_name, f.nick_name, f.msg_title, f.msg_type, f.order_id, f.msg_status, f.msg_time, f.msg_area, COUNT(r.msg_id) AS reply " .
             "FROM " . $GLOBALS['ecs']->table('feedback') . " AS f ".
             "LEFT JOIN " . $GLOBALS['ecs']->table('feedback') . " AS r ON r.parent_id=f.msg_id ".
             "WHERE f.parent_id = 0 $where " .
