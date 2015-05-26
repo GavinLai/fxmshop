@@ -237,6 +237,12 @@
           </tr>
           {/if}
           <tr>
+            <td class="label">{$lang.lab_expiry_date}</td>
+            <td>
+              <input name="expiry_date" type="text" id="expiry_date" size="12" value='{$goods.expiry_date}' readonly="readonly" /><input name="selbtn_expiry_date" type="button" id="selbtn_expiry_date" onclick="return showCalendar('expiry_date', '%Y-%m-%d', false, false, 'selbtn_expiry_date');" value="{$lang.btn_select}" class="button"/>
+            </td>
+          </tr>
+          <tr>
             <td class="label">{$lang.lab_intro}</td>
             <td><input type="checkbox" name="is_best" value="1" {if $goods.is_best}checked="checked"{/if} />{$lang.is_best} <input type="checkbox" name="is_new" value="1" {if $goods.is_new}checked="checked"{/if} />{$lang.is_new} <input type="checkbox" name="is_hot" value="1" {if $goods.is_hot}checked="checked"{/if} />{$lang.is_hot}</td>
           </tr>
