@@ -221,8 +221,9 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
         $total_fee = $pay_fee + $amount;
 
         /* 插入 pay_log */
-        $sql = 'INSERT INTO ' . $ecs->table('pay_log') . " (order_id, order_amount, order_type, is_paid)" .
-                " VALUES ('$id', '$total_fee', '" .PAY_SURPLUS. "', 0)";
+        $order_sn = get_order_sn_from_db($id);
+        $sql = 'INSERT INTO ' . $ecs->table('pay_log') . " (order_id, order_sn, order_amount, order_type, is_paid)" .
+                " VALUES ('$id', '$order_sn', '$total_fee', '" .PAY_SURPLUS. "', 0)";
         $db->query($sql);
     }
 

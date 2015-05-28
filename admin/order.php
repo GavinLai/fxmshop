@@ -1245,8 +1245,8 @@ elseif ($_REQUEST['act'] == 'step_post')
         admin_log($order['order_sn'], 'add', 'order');
 
         /* 插入 pay_log */
-        $sql = 'INSERT INTO ' . $ecs->table('pay_log') . " (order_id, order_amount, order_type, is_paid)" .
-                " VALUES ('$order_id', 0, '" . PAY_ORDER . "', 0)";
+        $sql = 'INSERT INTO ' . $ecs->table('pay_log') . " (order_id, order_sn, order_amount, order_type, is_paid)" .
+                " VALUES ('$order_id', '" . $order['order_sn'] . "', 0, '" . PAY_ORDER . "', 0)";
         $db->query($sql);
 
         /* 下一步 */
@@ -1911,13 +1911,14 @@ elseif ($_REQUEST['act'] == 'step_post')
             }
         }
 
+        $order['order_sn'] = get_order_sn(); //后台更改了订单金额，则需要重新生成订单号，因为支付方一般不支持重复订单提交
         update_order($order_id, $order);
 
         /* 更新 pay_log */
         update_pay_log($order_id);
 
         /* todo 记录日志 */
-        $sn = $old_order['order_sn'];
+        $sn = $old_order['order_sn'].'->'.$order['order_sn'];
         $new_order = order_info($order_id);
         if ($old_order['total_fee'] != $new_order['total_fee'])
         {
@@ -5095,9 +5096,15 @@ function update_pay_log($order_id)
     $order_id = intval($order_id);
     if ($order_id > 0)
     {
-        $sql = "SELECT order_amount FROM " . $GLOBALS['ecs']->table('order_info') .
+        $sql = "SELECT order_sn,order_amount FROM " . $GLOBALS['ecs']->table('order_info') .
                 " WHERE order_id = '$order_id'";
-        $order_amount = $GLOBALS['db']->getOne($sql);
+        $order_tinfo  = $GLOBALS['db']->getRow($sql);
+        $order_sn     = '';
+        $order_amount = null;
+        if (!empty($order_tinfo)) {
+          $order_sn     = $order_tinfo['order_sn'];
+          $order_amount = $order_tinfo['order_amount'];
+        }
         if (!is_null($order_amount))
         {
             $sql = "SELECT log_id FROM " . $GLOBALS['ecs']->table('pay_log') .
@@ -5110,14 +5117,15 @@ function update_pay_log($order_id)
                 /* 未付款，更新支付金额 */
                 $sql = "UPDATE " . $GLOBALS['ecs']->table('pay_log') .
                         " SET order_amount = '$order_amount' " .
+                            ",order_sn = '$order_sn' " .
                         "WHERE log_id = '$log_id' LIMIT 1";
             }
             else
             {
                 /* 已付款，生成新的pay_log */
                 $sql = "INSERT INTO " . $GLOBALS['ecs']->table('pay_log') .
-                        " (order_id, order_amount, order_type, is_paid)" .
-                        "VALUES('$order_id', '$order_amount', '" . PAY_ORDER . "', 0)";
+                        " (order_id, order_sn, order_amount, order_type, is_paid)" .
+                        "VALUES('$order_id', '$order_sn', '$order_amount', '" . PAY_ORDER . "', 0)";
             }
             $GLOBALS['db']->query($sql);
         }

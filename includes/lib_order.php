@@ -840,6 +840,21 @@ function update_order($order_id, $order)
 }
 
 /**
+ * 从数据库获取订单号
+ * @param  int $order_id 订单id
+ * @return boolean|string
+ */
+function get_order_sn_from_db($order_id)
+{
+  $order_id = intval($order_id);
+  if (empty($order_id)) return false;
+  $sql = "SELECT order_sn FROM " . $GLOBALS['ecs']->table('order_info') .
+         " WHERE order_id = '$order_id'";
+  $order_sn = $GLOBALS['db']->getOne($sql);
+  return $order_sn;
+}
+
+/**
  * 得到新订单号
  * @return  string
  */
@@ -848,7 +863,8 @@ function get_order_sn()
     /* 选择一个随机的方案 */
     mt_srand((double) microtime() * 1000000);
 
-    return date('Ymd') . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
+    //return date('Ymd') . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
+    return 'E'.date('YmdHis') . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT); //同步fxmgou订单生成规则
 }
 
 /**
