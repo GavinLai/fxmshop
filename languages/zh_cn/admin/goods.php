@@ -120,6 +120,7 @@ $_LANG['lab_market_price'] = '市场售价：';
 $_LANG['lab_user_price'] = '会员价格：';
 $_LANG['lab_promote_price'] = '促销价：';
 $_LANG['lab_promote_date'] = '促销日期：';
+$_LANG['lab_booking_days'] = '预订天数：';
 $_LANG['lab_expiry_date'] = '过期日期：';
 $_LANG['lab_picture'] = '上传商品图片：';
 $_LANG['lab_thumb'] = '上传商品缩略图：';

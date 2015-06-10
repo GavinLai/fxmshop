@@ -237,6 +237,10 @@
           </tr>
           {/if}
           <tr>
+            <td class="label">{$lang.lab_booking_days}</td>
+            <td><select name="booking_days">{html_options options=$booking_days_list selected=$goods.booking_days}</select></td>
+          </tr>
+          <tr>
             <td class="label">{$lang.lab_expiry_date}</td>
             <td>
               <input name="expiry_date" type="text" id="expiry_date" size="12" value='{$goods.expiry_date}' readonly="readonly" /><input name="selbtn_expiry_date" type="button" id="selbtn_expiry_date" onclick="return showCalendar('expiry_date', '%Y-%m-%d', false, false, 'selbtn_expiry_date');" value="{$lang.btn_select}" class="button"/>

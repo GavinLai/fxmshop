@@ -123,6 +123,7 @@ $_LANG['lab_market_price'] ='Market price:';
 $_LANG['lab_user_price'] ='Member price:';
 $_LANG['lab_promote_price'] ='Promotion price:';
 $_LANG['lab_promote_date'] ='Promotion date:';
+$_LANG['lab_booking_days'] = 'Booking days:';
 $_LANG['lab_expiry_date'] = 'Expiry date:';
 $_LANG['lab_picture'] ='Upload picture:';
 $_LANG['lab_thumb'] ='Upload thumbnail:';

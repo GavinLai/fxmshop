@@ -696,6 +696,26 @@ function get_origin_place_list()
 }
 
 /**
+ * 获取原产地列表
+ * @return array 原产地列表 id => name
+ */
+function get_booking_days_list()
+{
+    $booking_day_list = array(
+      '0'    =>  '现货',
+      '7'    =>  '1周内',
+      '14'   =>  '2周内',
+      '21'   =>  '3周内',
+      '28'   =>  '4周内',
+      '30'   =>  '1个月内',
+      '45'   =>  '1个半月',
+      '60'   =>  '2个月内',
+    );
+
+    return $booking_day_list;
+}
+
+/**
  * 获得某个分类下
  *
  * @access  public

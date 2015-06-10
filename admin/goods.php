@@ -176,6 +176,7 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit' || $_REQUEST['ac
             'warn_number'   => 1,
             'promote_start_date' => local_date('Y-m-d'),
             'promote_end_date'   => local_date('Y-m-d', local_strtotime('+1 month')),
+            'booking_days'  => 0,
             'expiry_date'   => '',
             'goods_weight'  => 0,
             'give_integral' => -1,
@@ -247,6 +248,7 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit' || $_REQUEST['ac
                 'warn_number'   => 1,
                 'promote_start_date' => local_date('Y-m-d'),
                 'promote_end_date'   => local_date('Y-m-d', gmstr2tome('+1 month')),
+                'booking_days'  => 0,
                 'expiry_date'   => '',
                 'goods_weight'  => 0,
                 'give_integral' => -1,
@@ -433,7 +435,7 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit' || $_REQUEST['ac
     $smarty->assign('cat_list', cat_list(0, $goods['cat_id']));
     $smarty->assign('brand_list', get_brand_list());
     $smarty->assign('origin_place_list', get_origin_place_list());
-    //$smarty->assign('origin_place_list', cat_list(ORIGIN_PLACE_TOP_CAT_ID, $goods['origin_place_id'], true, 2));
+    $smarty->assign('booking_days_list', get_booking_days_list());
     $smarty->assign('unit_list', get_unit_list());
     $smarty->assign('user_rank_list', get_user_rank_list());
     $smarty->assign('weight_unit', $is_add ? '1' : ($goods['goods_weight'] >= 1 ? '1' : '0.001'));
@@ -816,6 +818,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
     $is_promote = empty($promote_price) ? 0 : 1;
     $promote_start_date = ($is_promote && !empty($_POST['promote_start_date'])) ? local_strtotime($_POST['promote_start_date']) : 0;
     $promote_end_date = ($is_promote && !empty($_POST['promote_end_date'])) ? local_strtotime($_POST['promote_end_date']) : 0;
+    $booking_days = !empty($_POST['booking_days']) ? $_POST['booking_days'] : 0;
     $expiry_date  = !empty($_POST['expiry_date']) ? $_POST['expiry_date'] : '';
     $goods_weight = !empty($_POST['goods_weight']) ? $_POST['goods_weight'] * $_POST['weight_unit'] : 0;
     $is_best = isset($_POST['is_best']) ? 1 : 0;
@@ -846,12 +849,12 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
         {
             $sql = "INSERT INTO " . $ecs->table('goods') . " (goods_name, goods_name_style, goods_sn, " .
                     "cat_id, origin_place_id, brand_id, shop_price, income_price, market_price, is_promote, promote_price, " .
-                    "promote_start_date, promote_end_date, expiry_date, goods_img, goods_thumb, original_img, keywords, goods_brief, " .
+                    "promote_start_date, promote_end_date, booking_days, expiry_date, goods_img, goods_thumb, original_img, keywords, goods_brief, " .
                     "seller_note, goods_weight, goods_number, warn_number, integral, give_integral, is_best, is_new, is_hot, " .
                     "is_on_sale, is_alone_sale, is_shipping, goods_desc, add_time, last_update, goods_type, rank_integral, suppliers_id)" .
                 "VALUES ('$_POST[goods_name]', '$goods_name_style', '$goods_sn', '$catgory_id', '$origin_place_id'," .
                     "'$brand_id', '$shop_price', '$income_price' , '$market_price', '$is_promote','$promote_price', ".
-                    "'$promote_start_date', '$promote_end_date', '$expiry_date' ,'$goods_img', '$goods_thumb', '$original_img', ".
+                    "'$promote_start_date', '$promote_end_date', '$booking_days', '$expiry_date' , '$goods_img', '$goods_thumb', '$original_img', ".
                     "'$_POST[keywords]', '$_POST[goods_brief]', '$_POST[seller_note]', '$goods_weight', '$goods_number',".
                     " '$warn_number', '$_POST[integral]', '$give_integral', '$is_best', '$is_new', '$is_hot', '$is_on_sale', '$is_alone_sale', $is_shipping, ".
                     " '$_POST[goods_desc]', '" . gmtime() . "', '". gmtime() ."', '$goods_type', '$rank_integral', '$suppliers_id')";
@@ -860,12 +863,12 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
         {
             $sql = "INSERT INTO " . $ecs->table('goods') . " (goods_name, goods_name_style, goods_sn, " .
                     "cat_id, origin_place_id, brand_id, shop_price, income_price, market_price, is_promote, promote_price, " .
-                    "promote_start_date, promote_end_date, expiry_date, goods_img, goods_thumb, original_img, keywords, goods_brief, " .
+                    "promote_start_date, promote_end_date, booking_days, expiry_date, goods_img, goods_thumb, original_img, keywords, goods_brief, " .
                     "seller_note, goods_weight, goods_number, warn_number, integral, give_integral, is_best, is_new, is_hot, is_real, " .
                     "is_on_sale, is_alone_sale, is_shipping, goods_desc, add_time, last_update, goods_type, extension_code, rank_integral)" .
                 "VALUES ('$_POST[goods_name]', '$goods_name_style', '$goods_sn', '$catgory_id', '$origin_place_id', " .
                     "'$brand_id', '$shop_price', '$income_price' , '$market_price', '$is_promote','$promote_price', ".
-                    "'$promote_start_date', '$promote_end_date', '$expiry_date' ,'$goods_img', '$goods_thumb', '$original_img', ".
+                    "'$promote_start_date', '$promote_end_date', '$booking_days', '$expiry_date' ,'$goods_img', '$goods_thumb', '$original_img', ".
                     "'$_POST[keywords]', '$_POST[goods_brief]', '$_POST[seller_note]', '$goods_weight', '$goods_number',".
                     " '$warn_number', '$_POST[integral]', '$give_integral', '$is_best', '$is_new', '$is_hot', 0, '$is_on_sale', '$is_alone_sale', $is_shipping, ".
                     " '$_POST[goods_desc]', '" . gmtime() . "', '". gmtime() ."', '$goods_type', '$code', '$rank_integral')";
@@ -902,6 +905,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
                 "is_promote = '$is_promote', " .
                 "promote_price = '$promote_price', " .
                 "promote_start_date = '$promote_start_date', " .
+                "booking_days = '$booking_days', " .
                 "expiry_date = '$expiry_date', " .
                 "suppliers_id = '$suppliers_id', " .
                 "promote_end_date = '$promote_end_date', ";
