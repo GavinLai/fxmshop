@@ -3176,7 +3176,7 @@ elseif ($_REQUEST['act'] == 'batch_operate_post')
         foreach($order_id_list as $id_order)
         {
             $sql = "SELECT * FROM " . $ecs->table('order_info') .
-                " WHERE order_sn = $id_order" . order_query_sql('unpay_unship');
+                " WHERE order_sn = '{$id_order}'" . order_query_sql('unpay_unship');
 
             $order = $db->getRow($sql);
 
@@ -3234,7 +3234,7 @@ elseif ($_REQUEST['act'] == 'batch_operate_post')
         foreach($order_id_list as $id_order)
         {
             $sql = "SELECT * FROM " . $ecs->table('order_info') .
-                " WHERE order_sn = $id_order" . order_query_sql('unpay_unship');
+                " WHERE order_sn = '{$id_order}'" . order_query_sql('unpay_unship');
 
             $order = $db->getRow($sql);
             if($order)
