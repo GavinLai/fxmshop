@@ -15,7 +15,7 @@
 
 $_LANG['app_name'] = 'ECSHOP';
 $_LANG['cp_home'] = 'ECSHOP 管理中心';
-$_LANG['copyright'] = '版權所有 &copy; 2005-2012 上海商派網絡科技有限公司，並保留所有權利。';
+$_LANG['copyright'] = '版權所有 &copy; 2015 深圳福小蜜科技有限公司，並保留所有權利。';
 $_LANG['query_info'] = '共執行 %d 個查詢，用時 %s 秒';
 $_LANG['memory_info'] = '，內存佔用 %0.3f MB';
 $_LANG['gzip_enabled'] = '，Gzip 已啟用';
