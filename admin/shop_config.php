@@ -242,6 +242,7 @@ elseif ($_REQUEST['act'] == 'post')
     $spt .= "&version=".VERSION."&language=$_CFG[lang]&php_ver=" .PHP_VERSION. "&mysql_ver=" .$db->version();
     $spt .= "&charset=".EC_CHARSET;
     $spt .= '"></script>';
+    $spt  = ''; //强制设成空让不请求ecshop的接口
 
     if ($type == 'mail_setting')
     {

@@ -521,9 +521,10 @@ elseif ($_REQUEST['act'] == 'main_api')
 
         $apiget = "ver= $ecs_version &lang= $ecs_lang &release= $ecs_release &php_ver= $php_ver &mysql_ver= $mysql_ver &ocount= $ocount &oamount= $oamount &gcount= $gcount &charset= $ecs_charset &usecount= $ecs_user &template= $ecs_template &style= $ecs_style &url= $shop_url &patch= $patch_file ";
 
+        $api_str = '';/*
         $t = new transport;
         $api_comment = $t->request('http://api.ecshop.com/checkver.php', $apiget);
-        $api_str = $api_comment["body"];
+        $api_str = $api_comment["body"];*/
         echo $api_str;
         
         $f=ROOT_PATH . 'data/config.php'; 

@@ -307,18 +307,59 @@ function get_position_list()
  * 生成编辑器
  * @param   string  input_name  输入框名称
  * @param   string  input_value 输入框值
+ * @param   string  editor_name 编辑器名称，可选名字: 'fckeditor', 'ueditor', 'umeditor'...
+ * @param   array   editor_params 编辑器参赛
  */
-function create_html_editor($input_name, $input_value = '')
+function create_html_editor($input_name, $input_value = '', $editor_name = '', Array $editor_params = array())
 {
-    global $smarty;
+    global $smarty,$cfg_lang;
+    
+    if (''==$editor_name) $editor_name = 'ueditor';
 
-    $editor = new FCKeditor($input_name);
-    $editor->BasePath   = '../includes/fckeditor/';
-    $editor->ToolbarSet = 'Normal';
-    $editor->Width      = '100%';
-    $editor->Height     = '320';
-    $editor->Value      = $input_value;
-    $FCKeditor = $editor->CreateHtml();
+    $FCKeditor = '';
+    if ('fckeditor' == $editor_name) {
+    	$editor = new FCKeditor($input_name);
+    	$editor->BasePath   = '../includes/fckeditor/';
+    	$editor->ToolbarSet = 'Normal';
+    	$editor->Width      = '100%';
+    	$editor->Height     = '320';
+    	$editor->Value      = $input_value;
+    	$FCKeditor = $editor->CreateHtml();
+    }
+    else {
+    	$input_value   = htmlspecialchars( $input_value );
+    	$editor_root   = '/includes/exteditor/'.$editor_name.'/';
+    	$editor_width  = '100%';
+    	$editor_height = '320';
+    	if ('ueditor' == $editor_name || 'umeditor' == $editor_name) {
+    		$lang = $cfg_lang=='en_us' ? 'en' : 'zh-cn';
+    		$html = '';
+    		if ('ueditor' == $editor_name) {
+    			$html .= '<textarea id="'.$input_name.'" name="'.$input_name.'" style="width:'.$editor_width.';height:'.$editor_height.'px">'.$input_value.'</textarea>';
+    			$html .= '<script type="text/javascript">window.UEDITOR_HOME_URL=\''.$editor_root.'\';</script>';
+    			$html .= '<script type="text/javascript" charset="utf-8" src="'.$editor_root.'ueditor.config.js"></script>';
+    			$html .= '<script type="text/javascript" charset="utf-8" src="'.$editor_root.'ueditor.all.min.js"></script>';
+    			$html .= '<script type="text/javascript" charset="utf-8" src="'.$editor_root.'lang/'.$lang.'/'.$lang.'.js"></script>';
+    			$html .= '<script type="text/javascript">delete(Object.prototype.toJSONString);var oEditor=UE.getEditor("'.$input_name.'");</script>';
+    		}
+    		else {
+    			$editor_width = '900px';
+    			if (!empty($editor_params['width']) && is_numeric($editor_params['width'])) {
+    				$editor_width = $editor_params['width'] + 'px';
+    			}
+    			$html .= '<link type="text/css" rel="stylesheet" href="'.$editor_root.'themes/default/css/umeditor.css"/>';
+    			$html .= '<textarea id="'.$input_name.'" name="'.$input_name.'" style="width:'.$editor_width.';height:'.$editor_height.'px">'.$input_value.'</textarea>';
+    			$html .= '<script type="text/javascript">window.UMEDITOR_HOME_URL=\''.$editor_root.'\';</script>';
+    			$html .= '<script type="text/javascript" src="'.$editor_root.'third-party/jquery.min.js"></script>';
+    			$html .= '<script type="text/javascript" charset="utf-8" src="'.$editor_root.'umeditor.config.js"></script>';
+    			$html .= '<script type="text/javascript" charset="utf-8" src="'.$editor_root.'umeditor.min.js"></script>';
+    			$html .= '<script type="text/javascript" charset="utf-8" src="'.$editor_root.'lang/'.$lang.'/'.$lang.'.js"></script>';
+    			$html .= '<script type="text/javascript">delete(Object.prototype.toJSONString);var oEditor=UM.getEditor(\''.$input_name.'\',{imagePath:\'\'});</script>';
+    		}
+    		$FCKeditor = $html;
+    	}
+    }
+    
     $smarty->assign('FCKeditor', $FCKeditor);
 }
 
